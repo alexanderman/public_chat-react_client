@@ -1,24 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import './App.scss';
+import Header from './components/Header';
+import Login from './components/Login';
+import Chat from './components/Chat/Chat';
+import getRandomAvatar from './services/avatars-service';
+
 
 function App() {
+  const [user, setUser] = useState(null);
+
+  const login = (input) => {
+    setUser({
+      username: input,
+      avatarUrl: getRandomAvatar()
+    });
+  }
+
+  const logout = () => {
+    setUser(null);
+  }
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header user={user} logout={logout} />
+      {!user 
+        ? <Login onLogin={login} /> 
+        : <Chat user={user} />}
     </div>
   );
 }
